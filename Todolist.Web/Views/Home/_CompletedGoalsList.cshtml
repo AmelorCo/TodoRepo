@@ -1,0 +1,42 @@
+﻿@using PagedList.Mvc
+@model PagedList.PagedList<Todolist.Domain.Entities.Goals>
+
+<div>
+    @Html.PagedListPager(Model, page => Url.Action("List", new { page, pageSize = Model.PageSize }),
+        PagedListRenderOptions.EnableUnobtrusiveAjaxReplacing(new PagedListRenderOptions
+        {
+            LinkToFirstPageFormat = "<<",
+            LinkToPreviousPageFormat = "<",
+            LinkToNextPageFormat = ">",
+            LinkToLastPageFormat = ">>"
+        }
+            , new AjaxOptions { HttpMethod = "GET", UpdateTargetId = "goalsList", LoadingElementId = "loading" })
+        )
+</div>
+<table class="table table-striped table-bordered">
+    <thead>
+        <tr>
+            <th>Дата добавления</th>
+            <th>Название</th>
+            <th>Описание</th>
+            <th>Важность</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>@Html.DisplayFor(m => item.CreationDate)</td>
+                <td>@Html.DisplayFor(m => item.Name)</td>
+                <td>@Html.DisplayFor(m => item.Description)</td>
+                <td>@Html.DisplayFor(m => item.Priority.Name)</td>
+                <td>
+                    <span><a class="btn btn-sm btn-info" data-toggle="tooltip" title="Изменить" href="@Url.Action("EditGoal", "Home", new {id = item.GoalId})"><span class="glyphicon glyphicon-edit"></span>&nbsp;Изменить</a></span>
+                    <span><a class="btn btn-sm btn-danger" data-toggle="tooltip" title="Удалить" href="@Url.Action("RemoveGoal", "Home", new {id = item.GoalId})"><span class="glyphicon glyphicon-trash"></span>&nbsp;Удалить</a></span>
+                </td>
+
+            </tr>
+        }
+    </tbody>
+</table>
